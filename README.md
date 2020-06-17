@@ -14,11 +14,10 @@ Indicies are in all 4 corners of the poker-sized cards for both left and right h
 
 The deck size was chosen because 60 is the least common multiple of 1, 2, 3, 4, 5, and 6. Gems were determined to be the suits because they are physical objects of comparable - and sometimes subjective - value. The suit count was chosen after several iterations: 4 was too popular, 5 was too many despite allowing for more pairs, 3 isn't common. The suits were chosen because their common colors line up with RGB, which also lines up with their common relative value. The suit shapes were chosen to also remind the relative ranking (less corners is better) while also being common shapes (Sapphire less so, but some sapphires have stars in them).
 
-Supplemental Materials
-----------------------
+Upcoming Materials
+------------------
 - **0's**: 12 cards with 0 pips have no suit. They can be used as wilds or as score keepers using the backs as counters.
 - **Score Track**: A track similar to a cribbage board for keeping store. Can fold to hold cards.
-- Poker Hand ranking reminder chart.
 - Dealing standard.
 - Simplified rules for families of games.
 - Standard for short decks.

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <title>Gems Deck Poker Hands</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+  <link href="./style.css" rel="stylesheet" />
+</head>
+
+<body>
+  <h1>Gems Deck Poker Hands</h1>
+  <p>The Gems deck has different poker hand ratings than you may be used too. That is because the hands have a different
+    probability, since the cards are different and no card can be played high and low.</p>
+  <h2>List of Hands</h2>
+  <p>The hands are listed in rank order. Hands of the same rank are compared by their highest card. In the case where
+    there are sets of cards (full house, three of a kind, two pair, etc.), compare the high card of the largest set
+    first. If hands differ only in suit, they tie.</p>
+  <ol>
+    <li><strong>Five of a Kind: </strong>Five cards of the same rank.</li>
+    <li><strong>Straight Flush: </strong>Five cards of sequential rank in the same suit.</li>
+    <li><strong>Straight: </strong>Five cards of sequential rank.</li>
+    <li><strong>Four of a Kind: </strong>Four cards of one rank.</li>
+    <li><strong>Full House: </strong>Three cards of the one rank, and two cards another rank.</li>
+    <li><strong>Flush: </strong>Five cards of one suit.</li>
+    <li><strong>Three of a Kind: </strong>Three cards of one rank.</li>
+    <li><strong>Two Pair: </strong>Two cards of one rank, and two cards of another rank.</li>
+    <li><strong>High Card: </strong>None of the above. This includes Pairs, which are more likely than No Pair.</li>
+  </ol>
+  <h2>Calculated Probability</h2>
+  <p>The following is a probability calculation of <span id="prob-run-count">5000000</span> hands.</p>
+  <table id="probability-table">
+    <tr>
+      <th>Hand</th>
+      <th>Probability</th>
+      <th>Cumulative Probability</th>
+    </tr>
+    <tr>
+      <td><em>Loading</em></td>
+      <td><em>Loading</em></td>
+      <td><em>Loading</em></td>
+    </tr>
+  </table>
+  <script type="module">
+    import { html, render } from 'https://unpkg.com/lit-html?module'
+    window.html = html
+    window.render = render
+  </script>
+  <script defer src="./report.js"></script>
+</body>
+
+</html>
