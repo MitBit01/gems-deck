@@ -8,7 +8,20 @@ function countEach(arr) {
     let oldCount = map.get(elm) ?? 0
     map.set(elm, oldCount + 1)
     return map
-  },new Map()).entries())
+  }, new Map()).entries())
+}
+
+/**
+ * @template T
+ * @param {T[]} arr 
+ * @param {function(T): boolean} predicate 
+ * @returns {boolean}
+ */
+function anyMatch(arr, predicate) {
+  for (const elm of arr)
+    if (predicate(elm))
+      return true
+  return false
 }
 
 function drawFrom(arr, n) {
@@ -23,18 +36,63 @@ function drawFrom(arr, n) {
   return result;
 }
 
-/** @param {{rank: number, suit: string}[]} arr */
-function classifyHand(arr) {
-  const isStraight = arr.map(card => card.rank)
-    .sort()
-    .every((rank, i) => rank - i === arr[0].rank)
-  const isFlush = arr.every(card => card.suit === arr[0].suit)
-  const rankCounts = countEach(arr.map(c => c.rank)).map(rc => rc[1])
-  if (isStraight && isFlush) {
+function incrementCounterMap(map, element) {
+  let oldCount = map.get(element) ?? 0
+  map.set(element, oldCount + 1)
+}
+
+/** @param {number[]} nums @returns {number} */
+function longestRun(nums) {
+  let longestRun = 0
+  let s = new Set(nums)
+  s.forEach(n => {
+    let count = 0
+    while (s.has(n + count))
+      count++
+    if (count > longestRun)
+      longestRun = count
+  })
+  return longestRun
+}
+
+/** @param {{rank: number, suit: string}[]} hand */
+function classifySicasepHand(hand) {
+  const counts = countEach(hand.map(c => c.rank)).map(rc => rc[1])
+  if (counts.includes(6)) {
+    return '6 of a Kind'
+  } else if (counts.includes(5)) {
+    return '5 of a Kind'
+  } else if (counts.includes(4) && counts.includes(2)) {
+    return 'Fuller House (Quad, Pair)'
+  } else if (counts.includes(4)) {
+    return 'One Quad'
+  } else if (counts.filter(c => c === 3).length === 2) {
+    return 'All Triples'
+  } else if (counts.includes(3) && counts.includes(2)) {
+    return 'Full House (Triple, Pair)'
+  } else if (counts.includes(3)) {
+    return 'One Triple'
+  } else if (counts.filter(c => c === 2).length === 3) {
+    return 'All Pairs'
+  } else if (counts.filter(c => c === 2).length === 2) {
+    return 'Two Pairs'
+  } else if (counts.includes(2)) {
+    return 'One Pair'
+  } else {
+    return 'All Solos'
+  }
+}
+
+/** @param {{rank: number, suit: string}[]} hand */
+function classifyPokerHand(hand) {
+  const hasStraight = longestRun(hand.map(c => c.rank)) >= 5
+  const hasFlush = anyMatch(countEach(hand.map(c => c.suit)), sc => sc[1] === 5)
+  const rankCounts = countEach(hand.map(c => c.rank)).map(rc => rc[1])
+  if (hasStraight && hasFlush) {
     return 'Straight Flush'
-  } else if (isStraight) {
+  } else if (hasStraight) {
     return 'Straight'
-  } else if (isFlush) {
+  } else if (hasFlush) {
     return 'Flush'
   } else if (rankCounts.includes(5)) {
     return 'Five of a Kind'
@@ -63,8 +121,8 @@ function cardCompare(c1, c2) {
 const cardTemplate = card => html`[ ${card.rank}${card.suit[0]} ]`
 const probRepRowTemplate = rowData => html`<tr>
   <td>${rowData.hand}:<br />${rowData.sample.sort(cardCompare).map(cardTemplate)}</td>
-  <td>${rowData.probability.toFixed(6)}</td>
-  <td>${rowData.cumulativeProbability.toFixed(6)}</td></tr>`
+  <td>${(rowData.probability * 100).toFixed(6)}%</td>
+  <td>${(rowData.cumulativeProbability * 100).toFixed(6)}%</td></tr>`
 const probRepTableTemplate = (rowDatas) => html`
   <tr><th>Hand</th><th>Probability</th><th>Cumulative Probability</th></tr>
   ${rowDatas.map(probRepRowTemplate)}`
@@ -78,27 +136,27 @@ for (const suit of suits) {
   }
 }
 
-const runCount = parseInt(document.querySelector('#prob-run-count').innerHTML)
-let handsToCounts = new Map()
-let handsToSamples = new Map()
-for (let run = 0; run < runCount; run++) {
-  let sample = drawFrom(deck, 5)
-  let hand = classifyHand(sample)
-  let count = handsToCounts.get(hand) ?? 0
-  handsToCounts.set(hand, count + 1)
-  if (!handsToSamples.has(hand)) handsToSamples.set(hand, sample)
-}
-let rowDatas = Array.from(handsToCounts.entries())
-  .sort((hc1, hc2) => hc1[1] - hc2[1])
-  .map(hc => ({
-    hand: hc[0],
-    sample: handsToSamples.get(hc[0]),
-    probability: hc[1] / runCount
-  }))
-let cumulativeProbability = 0
-for (const data of rowDatas) {
-  cumulativeProbability += data.probability
-  data.cumulativeProbability = cumulativeProbability
+const runCount = parseInt(document.querySelector('#prob-count').innerHTML.replace(/,/gi, ''))
+
+function runSimulation(classification, cardsDealt) {
+  let classCounts = new Map()
+  let classSamples = new Map()
+  for (let run = 0; run < runCount; run++) {
+    let sample = drawFrom(deck, cardsDealt)
+    let hand = classification(sample)
+    incrementCounterMap(classCounts, hand)
+    if (!classSamples.has(hand)) classSamples.set(hand, sample)
+  }
+  let rowDatas = Array.from(classCounts.entries()).sort((a, b) => a[1] - b[1])
+    .map(cc => ({ hand: cc[0], sample: classSamples.get(cc[0]), probability: cc[1] / runCount }))
+  let cumulativeProbability = 0
+  for (const data of rowDatas) {
+    cumulativeProbability += data.probability
+    data.cumulativeProbability = cumulativeProbability
+  }
+  return rowDatas
 }
 
-render(probRepTableTemplate(rowDatas), document.querySelector('#probability-table'))
+render(probRepTableTemplate(runSimulation(classifyPokerHand, 5)), document.querySelector('#prob-table-5'))
+render(probRepTableTemplate(runSimulation(classifyPokerHand, 7)), document.querySelector('#prob-table-7'))
+render(probRepTableTemplate(runSimulation(classifySicasepHand, 6)), document.querySelector('#prob-table-6'))

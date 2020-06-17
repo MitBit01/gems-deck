@@ -1,12 +1,7 @@
-body {
-  margin: 1em;
+body, th, td {
+  padding: 5px;
 }
 
 ol, ul {
   list-style-position: inside;
-}
-
-table tr th,
-table tr td {
-  margin-left: 1em;
 }

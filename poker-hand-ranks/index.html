@@ -17,31 +17,17 @@
   <p>The hands are listed in rank order. Hands of the same rank are compared by their highest card. In the case where
     there are sets of cards (full house, three of a kind, two pair, etc.), compare the high card of the largest set
     first. If hands differ only in suit, they tie.</p>
-  <ol>
-    <li><strong>Five of a Kind: </strong>Five cards of the same rank.</li>
-    <li><strong>Straight Flush: </strong>Five cards of sequential rank in the same suit.</li>
-    <li><strong>Straight: </strong>Five cards of sequential rank.</li>
-    <li><strong>Four of a Kind: </strong>Four cards of one rank.</li>
-    <li><strong>Full House: </strong>Three cards of the one rank, and two cards another rank.</li>
-    <li><strong>Flush: </strong>Five cards of one suit.</li>
-    <li><strong>Three of a Kind: </strong>Three cards of one rank.</li>
-    <li><strong>Two Pair: </strong>Two cards of one rank, and two cards of another rank.</li>
-    <li><strong>High Card: </strong>None of the above. This includes Pairs, which are more likely than No Pair.</li>
-  </ol>
   <h2>Calculated Probability</h2>
-  <p>The following is a probability calculation of <span id="prob-run-count">5000000</span> hands.</p>
-  <table id="probability-table">
-    <tr>
-      <th>Hand</th>
-      <th>Probability</th>
-      <th>Cumulative Probability</th>
-    </tr>
-    <tr>
-      <td><em>Loading</em></td>
-      <td><em>Loading</em></td>
-      <td><em>Loading</em></td>
-    </tr>
-  </table>
+  <p>The below tables are calculated from <span id="prob-count">4,000,000</span> hands.</p>
+  <h3>5-card Poker</h3>
+  <p>5-card Poker hands.</p>
+  <table id="prob-table-5"></table>
+  <h3>7-card Poker</h3>
+  <p>5-card Poker hands made from 7 available cards.</p>
+  <table id="prob-table-7"></table>
+  <h3>Sicasep</h3>
+  <p>Six-Card Set-Only Poker. Longer sets win unless all sets in the hand are the same length, then they beat one length higher.</p>
+  <table id="prob-table-6"></table>
   <script type="module">
     import { html, render } from 'https://unpkg.com/lit-html?module'
     window.html = html
